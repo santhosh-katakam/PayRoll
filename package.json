@@ -1,0 +1,28 @@
+{
+  "name": "payroll-management-system",
+  "version": "1.0.0",
+  "description": "Complete payroll management system with separate backend and frontend",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-backend": "cd backend && npm install",
+    "install-all": "npm run install-backend",
+    "test": "cd backend && npm test"
+  },
+  "keywords": [
+    "payroll",
+    "salary",
+    "management",
+    "fullstack",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "directories": {
+    "backend": "backend",
+    "frontend": "frontend",
+    "database": "database"
+  }
+}

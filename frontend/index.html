@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .nav-tab:hover {
+            background: #f0f0f0;
+        }
+        
+        .nav-tab.active:hover {
+            background: #5a6fd8;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .salary-statement {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .statement-header {
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .statement-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .statement-row.total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #667eea;
+            margin-top: 1rem;
+        }
+        
+        .employee-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-card.paid {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .employee-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .employee-card h4 {
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+        
+        .employee-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .statement-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Payroll Management System</h1>
+            <p>Comprehensive Employee Salary Management & Statement Generation</p>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('employees')">Employee Management</button>
+            <button class="nav-tab" onclick="showTab('salary')">Salary Processing</button>
+            <button class="nav-tab" onclick="showTab('payments')">Payment Management</button>
+            <button class="nav-tab" onclick="showTab('statements')">Salary Statements</button>
+            <button class="nav-tab" onclick="showTab('reports')">Reports</button>
+        </div>
+        
+        <!-- Employee Management Tab -->
+        <div id="employees" class="tab-content active">
+            <h2>Employee Management</h2>
+            
+            <div id="employeeAlert" class="alert hidden"></div>
+            
+            <form id="employeeForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="employeeId">Employee ID</label>
+                        <input type="text" id="employeeId" name="employeeId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfJoining">Date of Joining</label>
+                        <input type="date" id="dateOfJoining" name="dateOfJoining" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Department</option>
+                            <option value="IT">IT</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <input type="text" id="position" name="position" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="baseSalary">Base Salary</label>
+                        <input type="number" id="baseSalary" name="baseSalary" required>
+                    </div>
+                </div>
+                
+                <h3>Allowances</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="houseRent">House Rent Allowance</label>
+                        <input type="number" id="houseRent" name="allowances.houseRent" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="transport">Transport Allowance</label>
+                        <input type="number" id="transport" name="allowances.transport" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="medical">Medical Allowance</label>
+                        <input type="number" id="medical" name="allowances.medical" value="0">
+                    </div>
+                </div>
+                
+                <h3>Deductions</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="providentFund">Provident Fund</label>
+                        <input type="number" id="providentFund" name="deductions.providentFund" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="tax">Tax</label>
+                        <input type="number" id="tax" name="deductions.tax" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="insurance">Insurance</label>
+                        <input type="number" id="insurance" name="deductions.insurance" value="0">
+                    </div>
+                </div>
+                
+                <h3>Bank Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number</label>
+                        <input type="text" id="accountNumber" name="bankDetails.accountNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="bankName">Bank Name</label>
+                        <input type="text" id="bankName" name="bankDetails.bankName">
+                    </div>
+                    <div class="form-group">
+                        <label for="ifscCode">IFSC Code</label>
+                        <input type="text" id="ifscCode" name="bankDetails.ifscCode">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Add Employee</button>
+                <button type="button" class="btn btn-secondary" onclick="resetEmployeeForm()">Reset</button>
+            </form>
+            
+            <h3>Employee List</h3>
+            <div id="employeeList" class="employee-list"></div>
+        </div>
+
+        <!-- Salary Processing Tab -->
+        <div id="salary" class="tab-content">
+            <h2>Salary Processing</h2>
+
+            <div id="salaryAlert" class="alert hidden"></div>
+
+            <form id="salaryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salaryEmployeeId">Employee ID</label>
+                        <select id="salaryEmployeeId" name="employeeId" required>
+                            <option value="">Select Employee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryMonth">Month</label>
+                        <select id="salaryMonth" name="month" required>
+                            <option value="">Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryYear">Year</label>
+                        <input type="number" id="salaryYear" name="year" min="2020" max="2030" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="workingDays">Working Days</label>
+                        <input type="number" id="workingDays" name="workingDays" value="30" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="presentDays">Present Days</label>
+                        <input type="number" id="presentDays" name="presentDays" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="overtimeHours">Overtime Hours</label>
+                        <input type="number" id="overtimeHours" name="overtimeHours" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="overtimeRate">Overtime Rate (per hour)</label>
+                        <input type="number" id="overtimeRate" name="overtimeRate" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bonus">Bonus</label>
+                        <input type="number" id="bonus" name="allowances.bonus" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="lateDeduction">Late Deduction</label>
+                        <input type="number" id="lateDeduction" name="deductions.lateDeduction" value="0">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Process Salary</button>
+                <button type="button" class="btn btn-secondary" onclick="resetSalaryForm()">Reset</button>
+            </form>
+        </div>
+
+        <!-- Payment Management Tab -->
+        <div id="payments" class="tab-content">
+            <h2>Payment Management</h2>
+            <div id="paymentAlert" class="alert hidden"></div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="paymentMonth">Month</label>
+                    <select id="paymentMonth">
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentYear">Year</label>
+                    <select id="paymentYear">
+                        <option value="">Select Year</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn" onclick="loadPendingPayments()">Load Pending Payments</button>
+                </div>
+            </div>
+
+            <div id="pendingPaymentsList" class="payment-list"></div>
+        </div>
+
+        <!-- Salary Statements Tab -->
+        <div id="statements" class="tab-content">
+            <h2>Salary Statements</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="statementEmployeeId">Employee ID</label>
+                    <select id="statementEmployeeId">
+                        <option value="">Select Employee</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statementMonth">Month</label>
+                    <select id="statementMonth">
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statementYear">Year</label>
+                    <input type="number" id="statementYear" min="2020" max="2030">
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn" onclick="generateStatement()">Generate Statement</button>
+                </div>
+            </div>
+
+            <div id="salaryStatement" class="salary-statement hidden">
+                <!-- Statement will be generated here -->
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <h2>Reports</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="reportMonth">Month</label>
+                    <select id="reportMonth">
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportYear">Year</label>
+                    <input type="number" id="reportYear" min="2020" max="2030">
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn" onclick="generateReport()">Generate Report</button>
+                </div>
+            </div>
+
+            <div id="reportContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+
+            // Load data for specific tabs
+            if (tabName === 'employees') {
+                loadEmployees();
+            } else if (tabName === 'salary') {
+                loadEmployeeOptions('salaryEmployeeId');
+            } else if (tabName === 'payments') {
+                // Set default month/year for payments
+                const now = new Date();
+                document.getElementById('paymentMonth').value = now.getMonth() + 1;
+                document.getElementById('paymentYear').value = now.getFullYear();
+            } else if (tabName === 'statements') {
+                loadEmployeeOptions('statementEmployeeId');
+            }
+        }
+
+        // Utility functions
+        function showAlert(elementId, message, type = 'success') {
+            const alertElement = document.getElementById(elementId);
+            alertElement.className = `alert alert-${type}`;
+            alertElement.textContent = message;
+            alertElement.classList.remove('hidden');
+
+            setTimeout(() => {
+                alertElement.classList.add('hidden');
+            }, 5000);
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(amount);
+        }
+
+        function getMonthName(monthNumber) {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            return months[monthNumber - 1];
+        }
+
+        // Employee Management Functions
+        async function loadEmployees() {
+            try {
+                const response = await fetch(`${API_BASE}/employees`);
+                const employees = await response.json();
+
+                const employeeList = document.getElementById('employeeList');
+                employeeList.innerHTML = '';
+
+                employees.forEach(employee => {
+                    const employeeCard = document.createElement('div');
+                    employeeCard.className = 'employee-card';
+                    employeeCard.innerHTML = `
+                        <h4>${employee.fullName} (${employee.employeeId})</h4>
+                        <div class="employee-info">
+                            <div><strong>Department:</strong> ${employee.department}</div>
+                            <div><strong>Position:</strong> ${employee.position}</div>
+                            <div><strong>Email:</strong> ${employee.email}</div>
+                            <div><strong>Phone:</strong> ${employee.phone}</div>
+                            <div><strong>Base Salary:</strong> ${formatCurrency(employee.baseSalary)}</div>
+                            <div><strong>Joining Date:</strong> ${new Date(employee.dateOfJoining).toLocaleDateString()}</div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-secondary" onclick="editEmployee('${employee.employeeId}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteEmployee('${employee.employeeId}')">Delete</button>
+                        </div>
+                    `;
+                    employeeList.appendChild(employeeCard);
+                });
+            } catch (error) {
+                showAlert('employeeAlert', 'Error loading employees: ' + error.message, 'error');
+            }
+        }
+
+        async function loadEmployeeOptions(selectId) {
+            try {
+                const response = await fetch(`${API_BASE}/employees`);
+                const employees = await response.json();
+
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Select Employee</option>';
+
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.employeeId;
+                    option.textContent = `${employee.fullName} (${employee.employeeId})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading employee options:', error);
+            }
+        }
+
+        // Employee form handling
+        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Check if this is an update operation
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            if (submitBtn.onclick) {
+                // This is an update operation, let the onclick handler deal with it
+                return;
+            }
+
+            const formData = new FormData(e.target);
+            const employeeData = {};
+
+            // Handle nested objects
+            for (let [key, value] of formData.entries()) {
+                if (key.includes('.')) {
+                    const [parent, child] = key.split('.');
+                    if (!employeeData[parent]) employeeData[parent] = {};
+                    employeeData[parent][child] = value;
+                } else {
+                    employeeData[key] = value;
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/employees`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(employeeData)
+                });
+
+                if (response.ok) {
+                    showAlert('employeeAlert', 'Employee added successfully!');
+                    resetEmployeeForm();
+                    loadEmployees();
+                } else {
+                    const error = await response.json();
+                    showAlert('employeeAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('employeeAlert', 'Error adding employee: ' + error.message, 'error');
+            }
+        });
+
+        function resetEmployeeForm() {
+            document.getElementById('employeeForm').reset();
+        }
+
+        async function editEmployee(employeeId) {
+            try {
+                const response = await fetch(`${API_BASE}/employees/${employeeId}`);
+                if (response.ok) {
+                    const employee = await response.json();
+                    populateEmployeeForm(employee);
+
+                    // Change form button to update mode
+                    const submitBtn = document.querySelector('#employeeForm button[type="submit"]');
+                    submitBtn.textContent = 'Update Employee';
+                    submitBtn.onclick = (e) => updateEmployee(e, employeeId);
+
+                    // Add cancel button
+                    if (!document.getElementById('cancelEditBtn')) {
+                        const cancelBtn = document.createElement('button');
+                        cancelBtn.type = 'button';
+                        cancelBtn.className = 'btn btn-secondary';
+                        cancelBtn.id = 'cancelEditBtn';
+                        cancelBtn.textContent = 'Cancel Edit';
+                        cancelBtn.onclick = cancelEdit;
+                        submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
+                    }
+
+                    // Scroll to form
+                    document.getElementById('employeeForm').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    const error = await response.json();
+                    showAlert('employeeAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('employeeAlert', 'Error loading employee: ' + error.message, 'error');
+            }
+        }
+
+        function populateEmployeeForm(employee) {
+            document.getElementById('employeeId').value = employee.employeeId;
+            document.getElementById('firstName').value = employee.firstName;
+            document.getElementById('lastName').value = employee.lastName;
+            document.getElementById('email').value = employee.email;
+            document.getElementById('phone').value = employee.phone;
+            document.getElementById('dateOfJoining').value = employee.dateOfJoining.split('T')[0];
+            document.getElementById('department').value = employee.department;
+            document.getElementById('position').value = employee.position;
+            document.getElementById('baseSalary').value = employee.baseSalary;
+
+            // Allowances
+            document.getElementById('houseRent').value = employee.allowances.houseRent || 0;
+            document.getElementById('transport').value = employee.allowances.transport || 0;
+            document.getElementById('medical').value = employee.allowances.medical || 0;
+
+            // Deductions
+            document.getElementById('providentFund').value = employee.deductions.providentFund || 0;
+            document.getElementById('tax').value = employee.deductions.tax || 0;
+            document.getElementById('insurance').value = employee.deductions.insurance || 0;
+
+            // Bank Details
+            document.getElementById('accountNumber').value = employee.bankDetails.accountNumber || '';
+            document.getElementById('bankName').value = employee.bankDetails.bankName || '';
+            document.getElementById('ifscCode').value = employee.bankDetails.ifscCode || '';
+
+            // Disable employee ID field during edit
+            document.getElementById('employeeId').disabled = true;
+        }
+
+        async function updateEmployee(e, employeeId) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const employeeData = {};
+
+            // Handle nested objects
+            for (let [key, value] of formData.entries()) {
+                if (key.includes('.')) {
+                    const [parent, child] = key.split('.');
+                    if (!employeeData[parent]) employeeData[parent] = {};
+                    employeeData[parent][child] = value;
+                } else {
+                    employeeData[key] = value;
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/employees/${employeeId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(employeeData)
+                });
+
+                if (response.ok) {
+                    showAlert('employeeAlert', 'Employee updated successfully!');
+                    cancelEdit();
+                    loadEmployees();
+                } else {
+                    const error = await response.json();
+                    showAlert('employeeAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('employeeAlert', 'Error updating employee: ' + error.message, 'error');
+            }
+        }
+
+        function cancelEdit() {
+            resetEmployeeForm();
+
+            // Reset form button
+            const submitBtn = document.querySelector('#employeeForm button[type="submit"]');
+            submitBtn.textContent = 'Add Employee';
+            submitBtn.onclick = null;
+
+            // Remove cancel button
+            const cancelBtn = document.getElementById('cancelEditBtn');
+            if (cancelBtn) {
+                cancelBtn.remove();
+            }
+
+            // Enable employee ID field
+            document.getElementById('employeeId').disabled = false;
+        }
+
+        async function deleteEmployee(employeeId) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/employees/${employeeId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showAlert('employeeAlert', 'Employee deleted successfully!');
+                        loadEmployees();
+                    } else {
+                        const error = await response.json();
+                        showAlert('employeeAlert', error.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('employeeAlert', 'Error deleting employee: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Salary Processing Functions
+        document.getElementById('salaryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const salaryData = {};
+
+            // Handle nested objects
+            for (let [key, value] of formData.entries()) {
+                if (key.includes('.')) {
+                    const [parent, child] = key.split('.');
+                    if (!salaryData[parent]) salaryData[parent] = {};
+                    salaryData[parent][child] = parseFloat(value) || 0;
+                } else {
+                    salaryData[key] = isNaN(value) ? value : parseFloat(value);
+                }
+            }
+
+            // Validation
+            if (!salaryData.employeeId || !salaryData.month || !salaryData.year) {
+                showAlert('salaryAlert', 'Please fill in all required fields (Employee, Month, Year)', 'error');
+                return;
+            }
+
+            if (salaryData.presentDays > salaryData.workingDays) {
+                showAlert('salaryAlert', 'Present days cannot be more than working days', 'error');
+                return;
+            }
+
+            // Calculate absent days
+            salaryData.absentDays = salaryData.workingDays - salaryData.presentDays;
+
+            try {
+                const response = await fetch(`${API_BASE}/salary`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(salaryData)
+                });
+
+                if (response.ok) {
+                    showAlert('salaryAlert', 'Salary processed successfully!');
+                    resetSalaryForm();
+                } else {
+                    const error = await response.json();
+                    showAlert('salaryAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('salaryAlert', 'Error processing salary: ' + error.message, 'error');
+            }
+        });
+
+        function resetSalaryForm() {
+            document.getElementById('salaryForm').reset();
+            document.getElementById('salaryYear').value = new Date().getFullYear();
+        }
+
+        // Salary Statement Functions
+        async function generateStatement() {
+            const employeeId = document.getElementById('statementEmployeeId').value;
+            const month = document.getElementById('statementMonth').value;
+            const year = document.getElementById('statementYear').value;
+
+            if (!employeeId || !month || !year) {
+                alert('Please select employee, month, and year');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/salary/${employeeId}/${month}/${year}/statement`);
+
+                if (response.ok) {
+                    const statement = await response.json();
+                    displayStatement(statement);
+                } else {
+                    const error = await response.json();
+                    if (response.status === 404) {
+                        alert(`No salary record found for the selected period.\n\nPlease:\n1. Go to "Salary Processing" tab\n2. Process salary for this employee for ${getMonthName(parseInt(month))} ${year}\n3. Then try generating the statement again`);
+                    } else {
+                        alert('Error: ' + error.message);
+                    }
+                }
+            } catch (error) {
+                alert('Error generating statement: ' + error.message);
+            }
+        }
+
+        function displayStatement(statement) {
+            const statementDiv = document.getElementById('salaryStatement');
+            const employee = statement.employee;
+            const salary = statement.salaryDetails;
+
+            // Add error checking
+            if (!employee || !salary) {
+                alert('Invalid statement data received');
+                return;
+            }
+
+            statementDiv.innerHTML = `
+                <div class="statement-header">
+                    <h2>SALARY STATEMENT</h2>
+                    <p><strong>Period:</strong> ${getMonthName(salary.month)} ${salary.year}</p>
+                    <p><strong>Generated on:</strong> ${new Date(statement.generatedAt).toLocaleDateString()}</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Employee Information</h3>
+                    <div class="statement-row">
+                        <span>Employee ID:</span>
+                        <span>${employee.employeeId}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Name:</span>
+                        <span>${employee.fullName}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Department:</span>
+                        <span>${employee.department}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Position:</span>
+                        <span>${employee.position}</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Attendance</h3>
+                    <div class="statement-row">
+                        <span>Working Days:</span>
+                        <span>${salary.workingDays}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Present Days:</span>
+                        <span>${salary.presentDays}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Absent Days:</span>
+                        <span>${salary.absentDays}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Overtime Hours:</span>
+                        <span>${salary.overtimeHours}</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Earnings</h3>
+                    <div class="statement-row">
+                        <span>Basic Salary:</span>
+                        <span>${formatCurrency(salary.baseSalary)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>House Rent Allowance:</span>
+                        <span>${formatCurrency(salary.allowances.houseRent || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Transport Allowance:</span>
+                        <span>${formatCurrency(salary.allowances.transport || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Medical Allowance:</span>
+                        <span>${formatCurrency(salary.allowances.medical || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Overtime Allowance:</span>
+                        <span>${formatCurrency(salary.allowances.overtime || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Bonus:</span>
+                        <span>${formatCurrency(salary.allowances.bonus || 0)}</span>
+                    </div>
+                    <div class="statement-row total">
+                        <span>Gross Salary:</span>
+                        <span>${formatCurrency(salary.grossSalary)}</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Deductions</h3>
+                    <div class="statement-row">
+                        <span>Provident Fund:</span>
+                        <span>${formatCurrency(salary.deductions.providentFund || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Tax:</span>
+                        <span>${formatCurrency(salary.deductions.tax || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Insurance:</span>
+                        <span>${formatCurrency(salary.deductions.insurance || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Late Deduction:</span>
+                        <span>${formatCurrency(salary.deductions.lateDeduction || 0)}</span>
+                    </div>
+                    <div class="statement-row">
+                        <span>Absent Deduction:</span>
+                        <span>${formatCurrency(salary.deductions.absentDeduction || 0)}</span>
+                    </div>
+                    <div class="statement-row total">
+                        <span>Total Deductions:</span>
+                        <span>${formatCurrency(salary.totalDeductions)}</span>
+                    </div>
+                </div>
+
+                <div class="statement-row total" style="font-size: 1.2rem; color: #667eea;">
+                    <span>NET SALARY:</span>
+                    <span>${formatCurrency(salary.netSalary)}</span>
+                </div>
+
+                <div style="margin-top: 2rem; text-align: center; color: #666;">
+                    <p><strong>Payment Status:</strong> ${salary.paymentStatus.toUpperCase()}</p>
+                    ${salary.paymentDate ? `<p><strong>Payment Date:</strong> ${new Date(salary.paymentDate).toLocaleDateString()}</p>` : ''}
+                    ${salary.remarks ? `<p><strong>Remarks:</strong> ${salary.remarks}</p>` : ''}
+                </div>
+            `;
+
+            statementDiv.classList.remove('hidden');
+        }
+
+        // Reports Functions
+        async function generateReport() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+
+            if (!month || !year) {
+                alert('Please select month and year');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/salary/summary/${month}/${year}`);
+
+                if (response.ok) {
+                    const summary = await response.json();
+                    displayReport(summary, month, year);
+                } else {
+                    const error = await response.json();
+                    alert('Error generating report: ' + error.message);
+                }
+            } catch (error) {
+                alert('Error generating report: ' + error.message);
+            }
+        }
+
+        function displayReport(summary, month, year) {
+            const reportDiv = document.getElementById('reportContent');
+
+            let content = `
+                <div class="salary-statement">
+                    <div class="statement-header">
+                        <h2>PAYROLL SUMMARY REPORT</h2>
+                        <p><strong>Period:</strong> ${getMonthName(parseInt(month))} ${year}</p>
+                        <p><strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+                    </div>`;
+
+            // Check if there are no records
+            if (summary.totalEmployees === 0) {
+                content += `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <h3>No Salary Records Found</h3>
+                        <p>No salary has been processed for ${getMonthName(parseInt(month))} ${year}</p>
+                        <p>To generate a report:</p>
+                        <ol style="text-align: left; display: inline-block;">
+                            <li>Go to "Employee Management" and add employees</li>
+                            <li>Go to "Salary Processing" and process salaries for ${getMonthName(parseInt(month))} ${year}</li>
+                            <li>Return here to generate the report</li>
+                        </ol>
+                    </div>
+                </div>`;
+                reportDiv.innerHTML = content;
+                return;
+            }
+
+            content += `
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h3 style="color: #667eea; margin-bottom: 0.5rem;">Total Employees</h3>
+                            <p style="font-size: 2rem; font-weight: bold; margin: 0;">${summary.totalEmployees}</p>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h3 style="color: #28a745; margin-bottom: 0.5rem;">Gross Salary</h3>
+                            <p style="font-size: 1.5rem; font-weight: bold; margin: 0;">${formatCurrency(summary.totalGrossSalary)}</p>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h3 style="color: #dc3545; margin-bottom: 0.5rem;">Total Deductions</h3>
+                            <p style="font-size: 1.5rem; font-weight: bold; margin: 0;">${formatCurrency(summary.totalDeductions)}</p>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                            <h3 style="color: #667eea; margin-bottom: 0.5rem;">Net Salary</h3>
+                            <p style="font-size: 1.5rem; font-weight: bold; margin: 0;">${formatCurrency(summary.totalNetSalary)}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3>Payment Status</h3>
+                        <div class="statement-row">
+                            <span>Paid:</span>
+                            <span>${summary.paymentStatus.paid} employees</span>
+                        </div>
+                        <div class="statement-row">
+                            <span>Pending:</span>
+                            <span>${summary.paymentStatus.pending} employees</span>
+                        </div>
+                        <div class="statement-row">
+                            <span>Cancelled:</span>
+                            <span>${summary.paymentStatus.cancelled} employees</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            reportDiv.innerHTML = content;
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in year inputs
+            const currentYear = new Date().getFullYear();
+            document.getElementById('salaryYear').value = currentYear;
+            document.getElementById('statementYear').value = currentYear;
+            document.getElementById('reportYear').value = currentYear;
+
+            // Load initial data
+            loadEmployees();
+        });
+
+        // Payment Management Functions
+        async function loadPendingPayments() {
+            const month = document.getElementById('paymentMonth').value;
+            const year = document.getElementById('paymentYear').value;
+
+            if (!month || !year) {
+                showAlert('paymentAlert', 'Please select both month and year', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/salary?month=${month}&year=${year}`);
+
+                if (response.ok) {
+                    const salaries = await response.json();
+                    displayPendingPayments(salaries, month, year);
+                } else {
+                    const error = await response.json();
+                    showAlert('paymentAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('paymentAlert', 'Error loading payments: ' + error.message, 'error');
+            }
+        }
+
+        function displayPendingPayments(salaries, month, year) {
+            const paymentsList = document.getElementById('pendingPaymentsList');
+
+            if (salaries.length === 0) {
+                paymentsList.innerHTML = `
+                    <div class="payment-card">
+                        <div class="payment-info">
+                            <h4>No salary records found</h4>
+                            <p>No salary records found for ${getMonthName(parseInt(month))} ${year}</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const paymentCards = salaries.map(salary => {
+                const isPaid = salary.paymentStatus === 'paid';
+                const cardClass = isPaid ? 'payment-card paid' : 'payment-card';
+
+                return `
+                    <div class="${cardClass}">
+                        <div class="payment-info">
+                            <h4>Employee ID: ${salary.employeeId}</h4>
+                            <p><strong>Net Salary:</strong> ${formatCurrency(salary.netSalary || salary.baseSalary)}</p>
+                            <p><strong>Status:</strong> <span style="color: ${isPaid ? '#28a745' : '#ffc107'}">${salary.paymentStatus || 'pending'}</span></p>
+                            ${salary.paymentDate ? `<p><strong>Payment Date:</strong> ${new Date(salary.paymentDate).toLocaleDateString()}</p>` : ''}
+                            ${salary.paymentMethod ? `<p><strong>Payment Method:</strong> ${salary.paymentMethod}</p>` : ''}
+                        </div>
+                        <div class="payment-actions">
+                            ${!isPaid ? `
+                                <button class="btn btn-small" onclick="markAsPaid('${salary.employeeId}', ${month}, ${year})">
+                                    Mark as Paid
+                                </button>
+                            ` : `
+                                <button class="btn btn-small btn-secondary" onclick="markAsPending('${salary.employeeId}', ${month}, ${year})">
+                                    Mark as Pending
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            paymentsList.innerHTML = paymentCards;
+        }
+
+        async function markAsPaid(employeeId, month, year) {
+            try {
+                const response = await fetch(`${API_BASE}/salary/${employeeId}/${month}/${year}/payment`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paymentStatus: 'paid',
+                        paymentDate: new Date().toISOString(),
+                        paymentMethod: 'bank_transfer'
+                    })
+                });
+
+                if (response.ok) {
+                    showAlert('paymentAlert', `Payment marked as paid for Employee ${employeeId}!`);
+                    loadPendingPayments(); // Refresh the list
+                } else {
+                    const error = await response.json();
+                    showAlert('paymentAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('paymentAlert', 'Error updating payment status: ' + error.message, 'error');
+            }
+        }
+
+        async function markAsPending(employeeId, month, year) {
+            try {
+                const response = await fetch(`${API_BASE}/salary/${employeeId}/${month}/${year}/payment`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paymentStatus: 'pending',
+                        paymentDate: null,
+                        paymentMethod: null
+                    })
+                });
+
+                if (response.ok) {
+                    showAlert('paymentAlert', `Payment marked as pending for Employee ${employeeId}!`);
+                    loadPendingPayments(); // Refresh the list
+                } else {
+                    const error = await response.json();
+                    showAlert('paymentAlert', error.message, 'error');
+                }
+            } catch (error) {
+                showAlert('paymentAlert', 'Error updating payment status: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
